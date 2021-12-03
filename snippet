@@ -1,0 +1,126 @@
+<script src="//yourdomain.com/js/forms2/js/forms2.min.js"></script>
+<form id="mktoForm_1111"></form>
+<script>MktoForms2.loadForm("//yourdomain.com", "333-AER-888", 1111, function(form){ 	jQuery('#FirstName, #LastName, #Company').keyup(function() 	{ 		var yourInput = jQuery(this).val(); 		re = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi; 		var isSplChar = re.test(yourInput); 		if(isSplChar) 		{ 			var no_spl_char = yourInput.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ''); 			jQuery(this).val(no_spl_char); 		} 	});    });</script>
+<script>
+MktoForms2.whenReady(function (form) {
+    form.onValidate(function(builtInValid){
+	    if (!builtInValid) return;
+		
+		form.submittable(true);
+		
+		  // Get the values
+		  var vals = form.vals();
+		  var formSubmittableErrors = 0;
+		  var regAlphaOnly = new RegExp(/^[A-Za-z ]*$/);
+		  var regAlphaAndSpaces = new RegExp(/^[A-Za-z  ]*$/);
+		  var regAlphaNumericOnly = new RegExp(/^[a-zA-Z0-9._ ]+$/);
+		  var regNumericOnly = new RegExp(/^[0-9]*$/);
+		  var regGoodEmailFormat = new RegExp(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i);
+		  var invalidDomains = ["@gmail.","@yahoo.","@hotmail.","@live.","@aol.","@outlook.", "@msn."];
+		  var regGoodFancyPhoneFormat = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
+		  var regGoodPhoneValues = new RegExp(/^[0-9 -\.]/);
+		  
+		  /* first name & last name:
+		  *             Must not be blank
+		  *             Must be more than 2 letters
+		  *             Cannot have special characters                
+		  *             Cannot have numbers
+		  */
+		  
+		  /* FirstName Validations */
+		  var firstNameElem = form.getFormElem().find("#FirstName");
+		  if(vals.FirstName.length < 2)  {
+						 var firstNameElem = form.getFormElem().find("#FirstName");
+						 form.showErrorMessage("Firstname must have a least 2 letters", firstNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+						
+		  } 
+		  if(!regAlphaAndSpaces.test(vals.FirstName)){
+						 form.showErrorMessage("Firstname must not contain symbols or numbers", firstNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+		  }
+		  
+		  /* LastName Validations */
+		  var lastNameElem = form.getFormElem().find("#LastName");
+		  if(vals.LastName.length < 2)  {
+						 form.showErrorMessage("Please enter a valid name", lastNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+		  } 
+		  if(!regAlphaAndSpaces.test(vals.LastName)){
+						 form.showErrorMessage("LastName must not contain symbols or numbers", lastNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+		  }
+		  
+		  /*  Company Name:
+		  *             Cannot have characters
+		  *             Must be greater than 2 characters
+		  */
+		  
+		  /* CompanyName Validations */
+		  var companyNameElem = form.getFormElem().find("#Company");
+		  if(vals.Company.length < 2 )  {
+						 form.showErrorMessage("Company name must contain at least 2 characters", companyNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+		  } 
+		  if(!regAlphaNumericOnly.test(vals.Company)){
+						 form.showErrorMessage("Company name must not contain symbols", companyNameElem);
+						 formSubmittableErrors++;
+						 form.submittable(false);
+		  }
+		  
+		  /* Email:
+		  * must be good format
+		  * must be a business email
+		  */
+		  
+		  /* email */
+		  var emailElem = form.getFormElem().find("#Email");
+		  if(!regGoodEmailFormat.test(vals.Email)){
+		     form.showErrorMessage("Please enter a valid email format", emailElem);
+             formSubmittableErrors++;
+			 form.submittable(false);
+          }
+		  if(!isEmailGood(vals.Email, invalidDomains)) {
+             form.showErrorMessage("Please enter a Business Email", emailElem);
+			 formSubmittableErrors++;
+			 form.submittable(false);
+          }
+		  
+		  
+		  /*if(formSubmittableErrors > 0) {
+		  alert('bad');
+			form.submittable(false);
+		  } */
+						  
+							  
+    });
+	
+	function isEmailGood(email, invalidDomains) {
+        for(var i=0; i < invalidDomains.length; i++) {
+            var domain = invalidDomains[i];
+            if (email.indexOf(domain) != -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+	
+});
+</script>
+
+<script>
+MktoForms2.whenReady(function (form){
+ //Add an onSuccess handler
+  form.onSuccess(function(values, followUpUrl) {
+   // Take the lead to a different page on successful submit, ignoring the form's configured followUpUrl
+  location.href = "https://yourdomain.com";
+   // Return false to prevent the submission handler continuing with its own processing
+   return false;
+   });
+});
+</script>
